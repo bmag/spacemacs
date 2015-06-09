@@ -12,4 +12,12 @@
 
 (setq window-purpose-pre-extensions '())
 
-(setq window-purpose-post-extensions '())
+(setq window-purpose-post-extensions '(purpose-popwin))
+
+(defun window-purpose/init-purpose-popwin ()
+  (use-package purpose-popwin
+    :config
+    (pupo-mode)
+    (evil-leader/set-key
+      "wpp" #'pupo/close-window
+      "wpP" #'pupo/close-all-windows)))
