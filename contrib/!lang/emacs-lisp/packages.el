@@ -51,7 +51,8 @@
       (add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode)
       (evil-leader/set-key-for-mode 'emacs-lisp-mode
         "mgg" 'elisp-slime-nav-find-elisp-thing-at-point
-        "mhh" 'elisp-slime-nav-describe-elisp-thing-at-point))))
+        "mhh" 'elisp-slime-nav-describe-elisp-thing-at-point)
+      (spacemacs|mark-for-evil-jumper elisp-slime-nav-find-elisp-thing-at-point))))
 
 (defun emacs-lisp/init-macrostep ()
   (use-package macrostep

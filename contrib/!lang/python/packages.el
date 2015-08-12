@@ -59,8 +59,7 @@
   (add-hook 'python-mode-hook 'eldoc-mode))
 
 (defun python/post-init-evil-jumper ()
-  (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
-    (evil-jumper--push)))
+  (spacemacs|mark-for-evil-jumper anaconda-mode-goto))
 
 (defun python/init-pip-requirements ()
   (use-package pip-requirements

@@ -1039,3 +1039,9 @@ is nonempty."
     (cond ((listp val) val)
           ((stringp val) (< 0 (length val)))
           (t))))
+
+(defmacro spacemacs|mark-for-evil-jumper (fn)
+  "Mark function FN as a jump location for evil-jumper.
+In practice, it just adds an advice to run `evil-jumper--set-jump' before FN."
+  `(defadvice ,fn (before spacemacs/mark-for-evil-jumper activate)
+     (evil-jumper--set-jump)))
