@@ -1,10 +1,9 @@
+;;; gtags
+
 (defun tags/enable-gtags-for-mode (mode)
-  (let ((mode-hook (intern (format "%s-hook" mode)))
-        (mode-map (intern (format "%s-map" mode))))
-    (tags/define-gtags-keys-for-mode mode)
-    (tags/enable-gtags-eldoc-for-mode mode)
-    (tags/enable-gtags-company-for-mode mode)
-    ))
+  (tags/define-gtags-keys-for-mode mode)
+  (tags/enable-gtags-eldoc-for-mode mode)
+  (tags/enable-gtags-company-for-mode mode))
 
 ;; keys:
 ;; d -> definition
@@ -54,3 +53,34 @@ Add this function to other hooks."
 This is actually a no-op, because `company-mode' support gtags out of the box
 via `company-gtags' backend.  Just make sure not to add another company backend
 infront of `company-gtags'.")
+
+
+;;; cscope
+;; only supports some key-bindings, due to xcscope/helm-cscope having less
+;; features than ggtags/helm-gtags. No eldoc, company support
+
+;; keys:
+;; d -> definition
+;; r -> referneces
+;; U -> update tags database
+(defun tags/define-cscope-keys-for-mode (mode)
+  "Define gtags key bindings for MODE.
+Also make sure that `helm-gtags-mode' is added to MODE's hook."
+  (add-hook (intern (concat (symbol-name mode) "-hook")) #'helm-cscope-mode)
+  (evil-leader/set-key-for-mode mode
+    ;; search
+    "mfd" #'helm-cscope-find-global-definition
+    "mfr" #'helm-cscope-find-this-symbol
+    ;; "mff" <no dwim goto for cscope>
+
+    ;; create/update tags
+    ;; "mfu" <no update tags for cscope>
+    "mfU" (if (eq mode 'python-mode)
+              #'tags/run-pycscope
+            #'cscope-index-files)
+
+    ;; location stack
+    ;; "mfl" <no browsable history for cscope>
+    ;; "mfn" <no next history for cscoep>
+    ;; "mfp" <no previous history for cscoep>
+    ))

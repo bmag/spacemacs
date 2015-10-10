@@ -17,6 +17,8 @@
         ggtags
 
         ;; cscope
+        helm-cscope
+        xcscope
 
         ;; general
         ;; evil-jumper, evil-set-jump
@@ -26,6 +28,8 @@
         ))
 
 (setq tags-excluded-packages '())
+
+;;; gtags
 
 (defun tags/init-helm-gtags ()
   (use-package helm-gtags
@@ -53,3 +57,38 @@
 (defun tags/init-ggtags ()
   (use-package ggtags
     :defer t))
+
+;;; cscope
+
+(defun tags/init-helm-cscope ()
+  (use-package helm-cscope
+    :defer t))
+
+(defun cscope/init-xcscope ()
+  (use-package xcscope
+    :commands (cscope-index-files tags/run-pycscope)
+    :init
+    (progn
+      ;; for python projects, we don't want xcscope to rebuild the databse,
+      ;; because it uses cscope instead of pycscope
+      (setq cscope-option-do-not-update-database t
+            cscope-display-cscope-buffer nil)
+
+      (defun tags//safe-project-root ()
+        "Return project's root, or nil if not in a project."
+        (and (fboundp 'projectile-project-root)
+             (projectile-project-p)
+             (projectile-project-root)))
+
+      (defun tags/run-pycscope (directory)
+        (interactive (list (file-name-as-directory
+                            (read-directory-name "Run pycscope in directory: "
+                                                 (tags//safe-project-root)))))
+        (let ((default-directory directory))
+          (shell-command
+           (format "pycscope -R -f '%s'"
+                   (expand-file-name "cscope.out" directory))))))
+      :config
+      (when (configuration-layer/package-usedp 'evil-jumper)
+        (defadvice helm-cscope-find-this-symbol (before add-evil-jump activate)
+          (evil-set-jump)))))

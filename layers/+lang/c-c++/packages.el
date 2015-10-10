@@ -138,10 +138,6 @@
      ;; Non-nil means display source file containing the main routine at startup
      gdb-show-main t)))
 
-(defun c-c++/post-init-helm-gtags ()
-  (spacemacs/helm-gtags-define-keys-for-mode 'c-mode)
-  (spacemacs/helm-gtags-define-keys-for-mode 'c++-mode))
-
 (defun c-c++/post-init-semantic ()
   (semantic/enable-semantic-mode 'c-mode)
   (semantic/enable-semantic-mode 'c++-mode))
@@ -174,3 +170,14 @@
     :post-init
     (dolist (mode '(c-mode c++-mode))
       (spacemacs/setup-helm-cscope mode))))
+
+(when (configuration-layer/layer-usedp 'tags)
+  (cl-case c-c++-tags-engine
+    (gtags
+     (defun c-c++/post-init-helm-gtags ()
+       (tags/define-gtags-keys-for-mode 'c-mode)
+       (tags/define-gtags-keys-for-mode 'c++-mode)))
+    (cscope
+     (defun c-c++/post-init-helm-cscope ()
+       (tags/define-cscope-keys-for-mode 'c-mode)
+       (tags/define-cscope-keys-for-mode 'c++-mode)))))

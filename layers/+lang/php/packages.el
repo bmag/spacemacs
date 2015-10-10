@@ -34,18 +34,10 @@
     :defer t))
 
 (defun php/post-init-eldoc ()
-  (add-hook 'php-mode-hook 'eldoc-mode)
-  (when (configuration-layer/package-usedp 'ggtags)
-    (spacemacs/ggtags-enable-eldoc 'php-mode)))
+  (add-hook 'php-mode-hook 'eldoc-mode))
 
 (defun php/post-init-flycheck ()
   (add-hook 'php-mode-hook 'flycheck-mode))
-
-(defun php/post-init-ggtags ()
-  (add-hook 'php-mode-hook 'ggtags-mode))
-
-(defun php/post-init-helm-gtags ()
-  (spacemacs/helm-gtags-define-keys-for-mode 'php-mode))
 
 (defun php/init-php-auto-yasnippets ()
   (use-package php-auto-yasnippets
@@ -67,3 +59,9 @@
 (defun php/init-phpunit ()
   (use-package phpunit
     :defer t))
+
+(when (configuration-layer/layer-usedp 'tags)
+  (defun php/post-init-ggtags ()
+    (tags/enable-gtags-eldoc-for-mode 'php-mode))
+  (defun php/post-init-helm-gtags ()
+    (tags/define-gtags-keys-for-mode 'php-mode)))

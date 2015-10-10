@@ -313,12 +313,6 @@ fix this issue."
 (defun python/post-init-stickyfunc-enhance ()
   (add-hook 'python-mode-hook 'spacemacs/lazy-load-stickyfunc-enhance))
 
-(defun python/pre-init-xcscope ()
-  (spacemacs|use-package-add-hook xcscope
-    :post-init
-    (evil-leader/set-key-for-mode 'python-mode "mgi" 'cscope/run-pycscope)))
-
-(defun python/pre-init-helm-cscope ()
-  (spacemacs|use-package-add-hook xcscope
-    :post-init
-    (spacemacs/setup-helm-cscope 'python-mode)))
+(when (configuration-layer/layer-usedp 'tags)
+  (defun python/post-init-helm-cscope ()
+    (tags/define-cscope-keys-for-mode 'python-mode)))

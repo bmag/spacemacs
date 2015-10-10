@@ -20,3 +20,7 @@
 
 (defvar c-c++-default-mode-for-headers 'c-mode
   "Default mode to open header files. Can be `c-mode' or `c++-mode'.")
+
+(defvar c-c++-tags-engine 'gtags
+  "Which tags engine to use, when the tags layer is used.
+Should be one of gtags or cscope.")
